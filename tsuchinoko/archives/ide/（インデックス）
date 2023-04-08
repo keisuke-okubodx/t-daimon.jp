@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ja" prefix="og: http://ogp.me/ns#">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="日本語プログラミング言語,プログラミング教材,DNCL,DNCL2,Python,つちのこ,プログラミング教育,プログラミング言語,Takumi Daimon">
+    <meta name="description" content="つちのこはPythonライクな文法の日本語で記述できる、ブラウザ上で動作するプログラミング言語です。">
+    <link rel="canonical" href="https://t-daimon.jp/">
+
+    <meta property="og:title" content="つちのこ">
+    <meta property="og:site_name" content="Takumi Daimon's web page">
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="つちのこはPythonライクな文法の日本語で記述できる、ブラウザ上で動作するプログラミング言語です。">
+    <meta property="og:url" content="https://t-daimon.jp/" />
+    <meta property="og:image" content="https://t-daimon.jp/images/tsuchinoko-img3.png" />
+    <meta property="og:locale" content="ja_JP">
+
+    <!--Twitter-->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://t-daimon.jp/images/tsuchinoko-img3.png">
+    <meta name="twitter:domain" content="https://t-daimon.jp/">
+
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>つちのこ1.0</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="../ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../ace/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="split-pane.css" />
+    <script src="split-pane.js"></script>
+    <script src="../../jscli.min.js"></script>
+    <link rel="shortcut icon" href="../../tsuchinoko.ico">
+    <link href="style.min.css" rel="stylesheet">
+    <script src="../example.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+</head>
+
+<body>
+    <div>
+        <a id="save" style="display: none"></a>
+        <input id="load" type="file" accept=".txt" style="display: none;" />
+        <button id="confb" data-toggle="modal" data-target="#modal1" style="display: none;visibility: hidden;"></button>
+        <button id="ipsopen" data-toggle="modal" data-target="#modal2"
+            style="display: none;visibility: hidden;"></button>
+        <button id="saveb" data-toggle="modal" data-target="#modal3" style="display: none;visibility: hidden;"></button>
+    </div>
+    <div id="ips-group" class="btn-group">
+    </div>
+    <div class="split-pane-frame-s" id="split-pane-frame-v">
+        <div class="split-pane fixed-top" id="split-pane-component-base-v">
+            <div class="split-pane-component" id="top-component">
+                <div class="split-pane-component-inner" id="top-container">
+                </div>
+            </div>
+            <div class="split-pane-divider" id="my-divider-v"></div>
+            <div class="split-pane-component" id="bottom-component">
+                <div class="split-pane-component-inner" id="bottom-container">
+                    <div class="split-pane fixed-left" id="split-pane-2">
+                        <div class="split-pane-component" id="left-component2">
+                            <div class="split-pane-component-inner" id="bottom-left-container">
+                            </div>
+                        </div>
+                        <div class="split-pane-divider" id="vertical-divider"></div>
+                        <div class="split-pane-component" id="right-component2">
+                            <div class="split-pane-component-inner" id="bottom-right-container">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="split-pane-frame-s" id="split-pane-frame-h">
+        <div class="split-pane fixed-left" id="split-pane-component-base-h">
+            <div class="split-pane-component" id="left-component">
+                <div class="split-pane-component-inner" id="left-container">
+                    <div class="split-pane fixed-top">
+                        <div class="split-pane-component" id="top-component1">
+                            <div class="split-pane-component-inner" id="left-top-container">
+                                <div id="editorBase">
+                                    <div class="editor-header">
+                                        <div class="btn-group text-nowrap">
+                                            <button id="toRun" class="btn btn-sm btn-light">実行</button>
+                                            <button id="toStepRun" class="btn btn-sm btn-light">ステップ</button>
+                                            <button id="stop" class="btn btn-sm btn-light">停止</button>
+                                            <button id="first" class="btn btn-sm btn-light">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-skip-backward-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M.5 3.5A.5.5 0 0 0 0 4v8a.5.5 0 0 0 1 0V8.753l6.267 3.636c.54.313 1.233-.066 1.233-.697v-2.94l6.267 3.636c.54.314 1.233-.065 1.233-.696V4.308c0-.63-.693-1.01-1.233-.696L8.5 7.248v-2.94c0-.63-.692-1.01-1.233-.696L1 7.248V4a.5.5 0 0 0-.5-.5z" />
+                                                </svg>
+                                            </button>
+                                            <button id="prev" class="btn btn-sm btn-light">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-skip-start-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M4 4a.5.5 0 0 1 1 0v3.248l6.267-3.636c.54-.313 1.232.066 1.232.696v7.384c0 .63-.692 1.01-1.232.697L5 8.753V12a.5.5 0 0 1-1 0V4z" />
+                                                </svg>
+                                            </button>
+                                            <button id="pause" class="btn btn-sm btn-light">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z" />
+                                                </svg>
+                                            </button>
+                                            <button id="step" class="btn btn-sm btn-light">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-skip-end-fill" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M12.5 4a.5.5 0 0 0-1 0v3.248L5.233 3.612C4.693 3.3 4 3.678 4 4.308v7.384c0 .63.692 1.01 1.233.697L11.5 8.753V12a.5.5 0 0 0 1 0V4z" />
+                                                </svg>
+                                            </button>
+                                            <button id="last" class="btn btn-sm btn-light">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-skip-forward-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M15.5 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V8.753l-6.267 3.636c-.54.313-1.233-.066-1.233-.697v-2.94l-6.267 3.636C.693 12.703 0 12.324 0 11.693V4.308c0-.63.693-1.01 1.233-.696L7.5 7.248v-2.94c0-.63.693-1.01 1.233-.696L15 7.248V4a.5.5 0 0 1 .5-.5z" />
+                                                </svg>
+                                            </button>
+                                            <div id="stepRange-base" class="btn-group pr-1 pl-1"
+                                                style="background-color: rgb(248, 249, 250);width: 200px;border: 1px solid rgb(159, 159, 159);border-top: 0px solid rgba(255, 255, 255, 0);border-bottom: 0px solid rgba(255, 255, 255, 0);">
+                                                <input type="range" class="custom-range" style="height:unset;"
+                                                    id="stepRange" value="0" min="0" max="0">
+                                            </div>
+                                            <button id="ips-open" class="btn btn-sm btn-light">入力支援<svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z" />
+                                                </svg></button>
+                                            <button id="profileOpt" class="btn btn-sm btn-light">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-reception-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-11z" />
+                                                </svg>
+                                                <span id="profilelb" class="badge badge-light">off</span>
+                                            </button>
+                                            <button class="btn btn-sm btn-light" id="toPy">Python変換</button>
+                                            <button id="conf-open" class="btn btn-sm btn-light" data-toggle="modal"
+                                                data-target="#modal1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <pre id="editor" class="editor">関数 listSum(numbers):
+    もし numbers == None ならば:
+        0 を返す
+    そうでなければ:
+        (f, rest) = numbers
+        f + listSum(rest) を返す
+
+myList = (1, (2, (3, None)))
+total = listSum(myList)
+表示する(total)</pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="split-pane-divider" id="horizontal-divider1"></div>
+                        <div class="split-pane-component" id="bottom-component1">
+                            <div class="split-pane-component-inner" id="left-bottom-container">
+                                <div id="component1">
+                                    <div class="console-header">
+                                        <span class="badge">コンソール</span>
+                                        <div id="state-label" style="display: inline-block;">
+                                            <span class="badge badge-info">実行待ち</span>
+                                        </div>
+                                    </div>
+                                    <pre id="console" spellcheck="false"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="split-pane-divider" id="my-divider"></div>
+            <div class="split-pane-component" id="right-component">
+                <!---->
+                <div id="component2">
+                    <div class="console-header">
+                        <span class="badge" id="stepLabel">ビューワー</span>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="item1" role="tabpanel" aria-labelledby="item1-tab">
+                            <div class="p-2">
+                                <table>
+                                    <tbody id="canvas-table">
+                                        <tr style="margin-bottom:1em;">
+                                            <th>描画</th>
+                                        </tr>
+                                        <tr style="margin-bottom:1em;">
+                                            <td>
+                                                <canvas id="g-canvas"></canvas>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table>
+                                    <tbody id="var-table">
+                                        <tr style="margin-bottom:1em;">
+                                            <th>グローバル変数</th>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr style="margin-bottom:1em;">
+                                            <th>ローカル変数</th>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table>
+                                    <tbody id="profile-table">
+                                        <tr>
+                                            <th>実行回数</th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div id="profile_graph_base"
+                                                    style="position: relative; height:auto; width:auto;min-height: 300px;min-width: 300px;">
+                                                    <canvas id="profile_graph"></canvas>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="label1">メニュー</h6>
+                    <button id="dialog_close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="overflow: auto;max-height: 420px;">
+                    <div class="form-group">
+                        <h6>ファイル</h6>
+                        <button id="save_as_txt" class="btn btn-sm btn-outline-secondary" data-toggle="modal"
+                            data-target="#modal3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-download" viewBox="0 0 16 16">
+                                <path
+                                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                <path
+                                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                            </svg>&nbsp;保存
+                        </button>
+                        <button id="open_file" class="btn btn-sm btn-outline-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-folder2-open" viewBox="0 0 16 16">
+                                <path
+                                    d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14V3.5zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5V6zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7H1.633z" />
+                            </svg>&nbsp;開く
+                        </button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="theme-names">テーマ</label>
+                            <select id="theme-names" class="form-control form-control-sm">
+                                <option value="gray" selected>グレー</option>
+                                <option value="white">ライト</option>
+                                <option value="dark">ダーク</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="font-sizes">フォントサイズ</label>
+                            <select id="font-sizes" class="form-control form-control-sm">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="example-names">サンプルを開く</label>
+                        <select id="example-names" class="form-control form-control-sm">
+                            <option value="" style="display: none;">選択してください</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <h6>リンク生成</h6>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">リンク&nbsp;:</div>
+                            </div>
+                            <a id="urlTxt" class="form-control d-inline-block text-truncate"></a>
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-primary" id="createUrl">生成</button>
+                            </div>
+                        </div>
+                        <div class="mt-1">
+                            <div id="qroutput">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h6>その他</h6>
+                        <p><a href="https://t-daimon.jp/tsuchinoko">トップ</a>&nbsp;/&nbsp;<a
+                                href="https://t-daimon.jp/tsuchinoko/archives/doc">ドキュメント</a>&nbsp;/&nbsp;<a
+                                href="https://t-daimon.jp/tsuchinoko/archives/example">プログラム例</a></p>
+                    </div>
+                </div>
+                <div class="modal-footer p-1">
+                    <div class="text-center">
+                        <a href="https://t-daimon.jp/"><img src="../../../images/icn.png" alt="" width="45px"
+                                height="32px"></a>
+                        <small class="text-muted">Copyright 2021 © Takumi Daimon.
+                            All Rights Reserved.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="label2" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="label2">入力支援<svg xmlns="http://www.w3.org/2000/svg" width="16"
+                            height="16" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
+                            <path
+                                d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z" />
+                        </svg></h6>
+                    <button id="ips-dialog_close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <select id="statements" class="form-control">
+                            <optgroup label="基本構文">
+                                <option value="標準出力">標準出力</option>
+                                <option value="標準出力(区切りあり)">標準出力(区切りあり)</option>
+                                <option value="標準入力">標準入力</option>
+                                <option value="標準入力(メッセージあり)">標準入力(メッセージあり)</option>
+                                <option value="代入">代入</option>
+                                <option value="条件分岐文(if文)">条件分岐文(if文)</option>
+                                <option value="条件分岐文(if-else文)">条件分岐文(if-else文)</option>
+                                <option value="条件分岐文(if-elif-else文)">条件分岐文(if-elif-else文)</option>
+                                <option value="順次繰返し文(for文)">順次繰返し文(for文)</option>
+                                <option value="順次繰返し文(for-in文)">順次繰り返し文(for-in文)</option>
+                                <option value="条件繰返し文(while文)">条件繰り返し文(while文)</option>
+                                <option value="関数定義">関数定義</option>
+                                <option value="関数定義(戻り値あり)">関数定義(戻り値あり)</option>
+                                <option value="クラス定義">クラス定義</option>
+                                <option value="呼び出し">呼び出し</option>
+                            </optgroup>
+                            <optgroup label="データ構造">
+                                <option value="配列">配列</option>
+                                <option value="タプル">タプル</option>
+                                <option value="辞書">辞書</option>
+                                <option value="集合">集合</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group mb-0 p-1 border border-secondary rounded"
+                        style="overflow: auto;background-color: #e9ecef;" id="input-support-content">
+                    </div>
+                </div>
+                <div class="modal-footer" id="ips-modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="modal3" tabindex="-1" role="dialog" aria-labelledby="label3" aria-hidden="true"
+        data-show="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="label3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                        </svg>&nbsp;プログラムの保存</h6>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="form-group">
+                            <p class="recipient">ファイル名を入力してください</p>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="ffname">
+                                <div class="input-group-append">
+                                    <div id="fextensiondiv" class="input-group-text">.txt</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">キャンセル</button>
+                    <button id="saveok" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script src="../tsuchinoko.js"></script>
+    <script src="main.min.js"></script>
+</body>
+
+</html>
