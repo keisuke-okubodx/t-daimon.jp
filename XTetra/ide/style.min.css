@@ -73,13 +73,8 @@
   border-left: 0 solid #bbb
 }
 
-.ace-tomorrow {
-  background-color: #e9ecef
-}
-
 .ace-tomorrow .ace_gutter {
-  border-right: 1px solid #bbb;
-  background-color: #e9ecef
+  border-right: 1px solid #bbb
 }
 
 .ace-tomorrow-night-bright .ace_gutter {
@@ -552,4 +547,16 @@ button {
 #dlqr:hover {
   text-decoration: underline;
   cursor: pointer
+}
+
+.ace_fold-widget {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA4klEQVR4XuWSzQoBURzFLbykB/AAbD2AJxCxoOQjzSwYyiguM5RrBo3vr2LUJJ9J9nTs7t+CNb86/fufc89dzB2X6/dgjLkLNe4r1QxLqfIbJnb49OwbOCSV2w2FmcPezI7NnUMQEzv8j5ckFd0vV835YncNU8FHTjsCiYI+aY5tbeRc8lTwkdOOQCTH7sbmaHq8gQcVfOS0IxCVG5O6ZfO+fa5QwUdOOwLxvO7Pqp2VtT2lqOAjpx0BfOV0saXJFWOqWetMd7kPYWKH//EVwOspVe6TVGMglfntNdUv/4M/5Qn9/eJbM2awgAAAAABJRU5ErkJggg==)
+}
+
+.ace_fold-widget.ace_closed {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA/klEQVR4XmNgGH5g//79LEvX7StcumHfxcXr9n4C0SA+SBxdLQZoACqavXLnwUUb9185fPnB3IuP33aBaBAfJA6SR9eDAvrnby6auXrvrZNPP88GYRUd5/8wNkgcJI+uBwW0z9pwbfXJu0d33fmwFYRBBsDYIHGQPLoeFFA9ceXXZRdeXAJpRMcgcZA8uh4UUDtl3bUFh26eW3ft9QEQBmmEsUHiIHl0PSigaca6ou5FO+5tu/VmFQiDDICxQeIgeXQ9KKChYT9L15yNhyYs3X1j9bEbq3dcezoLRIP4IHGQPLoeDABSNGHB1sKJi7ZcnrBgyycIvbWQKM0jFAAAgRbKt6rgXYIAAAAASUVORK5CYII=)
+}
+
+.error_message {
+  color: red
 }
